@@ -35,7 +35,7 @@ public class DistributionController {
 
     // 2. POST: Create a new record
     @PostMapping("/createDistribution")
-    public ResponseEntity<DistributionResponseDTO> createDistribution(@RequestBody @Valid DistributionRequestDTO requestDto) {
+    public ResponseEntity<DistributionResponseDTO> createDistribution(@RequestBody @Valid DistributionRequestDTO requestDto) throws Exception {
         DistributionResponseDTO response = distributionService.saveDistribution(requestDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

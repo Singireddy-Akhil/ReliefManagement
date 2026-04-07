@@ -20,13 +20,15 @@ public class Distribution {
     private Integer distributionId;
 
     @Column(name = "ItemID", nullable = false)
+//    @ManyToOne
+//    @JoinColumn(name = "reliefItem")
     private Integer itemId;
 
     @Column(name = "CitizenID")
     private Integer citizenId;
 
     @Column(name = "OfficerID")
-    private Integer officerId;
+      private Integer officerId;
 
     @Column(name = "Quantity")
     private Integer quantity;

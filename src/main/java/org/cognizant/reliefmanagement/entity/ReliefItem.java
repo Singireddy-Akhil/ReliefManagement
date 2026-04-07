@@ -19,7 +19,7 @@ public class ReliefItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="ItemId", nullable=false, unique=true)
-    private int itemId;
+    private Integer itemId;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING) // Added this to prevent mapping errors with Enums

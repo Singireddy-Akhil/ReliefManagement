@@ -6,11 +6,11 @@ import org.cognizant.reliefmanagement.Enum.shelterStatus;
 
 @Data
 public class ShelterRequestDTO {
-
-    @NotBlank(message="Name cannot be blank")
+    private Integer shelterId;
+    @NotBlank(message = "Name cannot be blank")
     private String name;
 
-    @NotBlank(message="Location cannot be blank")
+    @NotBlank(message = "Location cannot be blank")
     private String location;
 
     @NotNull(message = "Latitude is required")
@@ -27,8 +27,8 @@ public class ShelterRequestDTO {
     @NotNull(message = "Capacity cannot be null")
     private int capacity;
 
-    @Positive(message="Occupancy cannot be negative")
-    @NotNull(message ="Occupancy cannot be Empty")
+    @Positive(message = "Occupancy cannot be negative")
+    @NotNull(message = "Occupancy cannot be Empty")
     private int occupancy;
 
     @NotNull(message = "Status cannot be Empty")
@@ -38,21 +38,4 @@ public class ShelterRequestDTO {
     @Pattern(regexp = ".*@.*", message = "Contact Info must contain the '@' symbol")
     private String contactInfo;
 
-    // Standard Getters and Setters
-//    public String getName() { return name; }
-//    public void setName(String name) { this.name = name; }
-//    public String getLocation() { return location; }
-//    public void setLocation(String location) { this.location = location; }
-//    public Double getLatitude() { return latitude; }
-//    public void setLatitude(Double latitude) { this.latitude = latitude; }
-//    public Double getLongitude() { return longitude; }
-//    public void setLongitude(Double longitude) { this.longitude = longitude; }
-//    public int getCapacity() { return capacity; }
-//    public void setCapacity(int capacity) { this.capacity = capacity; }
-//    public int getOccupancy() { return occupancy; }
-//    public void setOccupancy(int occupancy) { this.occupancy = occupancy; }
-//    public shelterStatus getStatus() { return status; }
-//    public void setStatus(shelterStatus status) { this.status = status; }
-//    public String getContactInfo() { return contactInfo; }
-//    public void setContactInfo(String contactInfo) { this.contactInfo = contactInfo; }
 }

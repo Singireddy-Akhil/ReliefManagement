@@ -1,11 +1,19 @@
 package org.cognizant.reliefmanagement.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.SecurityContext;
+import lombok.RequiredArgsConstructor;
 import org.cognizant.reliefmanagement.Enum.distributionStatus;
+import org.cognizant.reliefmanagement.client.CitizenService;
+import org.cognizant.reliefmanagement.client.UserService;
 import org.cognizant.reliefmanagement.dao.DistributionRepository;
 import org.cognizant.reliefmanagement.dto.request.DistributionRequestDTO;
+import org.cognizant.reliefmanagement.dto.response.CitizenDto;
 import org.cognizant.reliefmanagement.dto.response.DistributionResponseDTO;
+import org.cognizant.reliefmanagement.dto.response.UserDto;
 import org.cognizant.reliefmanagement.entity.Distribution;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,13 +21,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class DistributionService {
 
     private final DistributionRepository distributionRepository;
+    private final UserService userService;
+//    private final CitizenService citizenService;
 
-    public DistributionService(DistributionRepository distributionRepository) {
-        this.distributionRepository = distributionRepository;
-    }
+//    public DistributionService(DistributionRepository distributionRepository) {
+//        this.distributionRepository = distributionRepository;
+//    }
 
 
     public List<DistributionResponseDTO> getAllDistributions() {
@@ -38,8 +49,15 @@ public class DistributionService {
     }
 
     @Transactional
-    public DistributionResponseDTO saveDistribution(DistributionRequestDTO dto) {
+    public DistributionResponseDTO saveDistribution(DistributionRequestDTO dto) throws Exception {
         // Use the Builder for consistency and null-safety
+        UserDto userDto=userService.findById(dto.getOfficerId());
+//        if(citizenService.findById(dto.getCitizenId())==null){
+//            throw new Exception("Citizen not found");
+//        }
+        if(userDto==null){
+            throw new Exception("Officer not found");
+        }
         Distribution distribution = Distribution.builder()
                 .itemId(dto.getItemId())
                 .citizenId(dto.getCitizenId())
@@ -57,6 +75,7 @@ public class DistributionService {
     @Transactional
     public DistributionResponseDTO updateDistribution(DistributionRequestDTO request) {
         // 1. Fetch the existing record (using Integer ID from DTO)
+        UserDto userDto=userService.findById(request.getOfficerId());
         Distribution existingRecord = distributionRepository.findById(request.getDistributionId())
                 .orElseThrow(() -> new RuntimeException("Distribution record not found for ID: " + request.getDistributionId()));
 
@@ -65,7 +84,7 @@ public class DistributionService {
                 .distributionId(existingRecord.getDistributionId()) // Keep original ID
                 .itemId(request.getItemId() != null ? request.getItemId() : existingRecord.getItemId())
                 .citizenId(request.getCitizenId() != null ? request.getCitizenId() : existingRecord.getCitizenId())
-                .officerId(request.getOfficerId() != null ? request.getOfficerId() : existingRecord.getOfficerId())
+                .officerId(userDto.getUserId())
                 .quantity(request.getQuantity() != null ? request.getQuantity() : existingRecord.getQuantity())
                 .notes(request.getNotes() != null ? request.getNotes() : existingRecord.getNotes())
                 .status(request.getStatus() != null ? parseStatus(request.getStatus()) : existingRecord.getStatus())

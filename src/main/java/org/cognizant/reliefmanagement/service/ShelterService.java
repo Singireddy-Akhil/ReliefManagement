@@ -81,11 +81,9 @@ public class ShelterService {
 
 
     public ShelterResponseDTO updateShelters(ShelterRequestDTO request) {
-        Shelter record = shelterRepository.findByName(request.getName());
+        Shelter record = shelterRepository.findById(request.getShelterId()).orElseThrow(()->new RuntimeException("Shelter not found"));
 
-        if (record == null) {
-            throw new RuntimeException("Shelter not found");
-        }
+
         Shelter updatedRecord = record.toBuilder()
                 .capacity(request.getCapacity())
                 .contactInfo(request.getContactInfo())

@@ -41,8 +41,9 @@ public class ShelterController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("/Shelters/updateShelter")
-    public ResponseEntity<ShelterResponseDTO> updateShelter(@RequestBody ShelterRequestDTO requestDTO){
+    @PutMapping("/Shelters/updateShelter/{id}")
+    public ResponseEntity<ShelterResponseDTO> updateShelter(@PathVariable Integer id ,@RequestBody ShelterRequestDTO requestDTO){
+       requestDTO.setShelterId(id);
         ShelterResponseDTO response=shelterService.updateShelters(requestDTO);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
