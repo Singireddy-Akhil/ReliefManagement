@@ -1,6 +1,8 @@
 package org.cognizant.reliefmanagement.service;
+import org.cognizant.reliefmanagement.client.UserService;
 import org.cognizant.reliefmanagement.dao.DistributionRepository;
 import org.cognizant.reliefmanagement.dao.ReliefItemRepository;
+import org.cognizant.reliefmanagement.dto.request.AuditLogDTO;
 import org.cognizant.reliefmanagement.dto.request.ReliefItemRequestDTO;
 import org.cognizant.reliefmanagement.dto.response.ReliefItemResponseDTO;
 import org.cognizant.reliefmanagement.entity.ReliefItem;
@@ -18,6 +20,8 @@ public class ReliefItemService {
 
     @Autowired
     private DistributionRepository distributionRepository;
+    @Autowired
+    private UserService userService;
 
 //    public ReliefItemService(ReliefItemRepository reliefItemsRepository){
 //        this.reliefItemsRepository = reliefItemsRepository;
@@ -55,6 +59,13 @@ public class ReliefItemService {
         item.setUpdatedAt(LocalDateTime.now());
 
         ReliefItem saved = reliefItemsRepository.save(item);
+        userService.createLog(AuditLogDTO.builder()
+                .userId(1)
+                .action("ADD_INVENTORY")
+                .resource("Item: " + saved.getName())
+                .details("Added " + saved.getQuantity() + " units of " + saved.getType())
+                .timestamp(LocalDateTime.now())
+                .build());
         return mapToResponseDTO(saved);
     }
 
@@ -84,6 +95,13 @@ public class ReliefItemService {
 
 
         reliefItemsRepository.deleteById(id);
+        userService.createLog(AuditLogDTO.builder()
+                .userId(1)
+                .action("REMOVE_INVENTORY")
+                .resource("ItemID: " + id)
+                .details("Item removed from catalog.")
+                .timestamp(LocalDateTime.now())
+                .build());
     }
 
     public ReliefItemResponseDTO updateReliefItem(ReliefItemRequestDTO request) {
@@ -101,6 +119,13 @@ public class ReliefItemService {
                 .status(request.getStatus())
                 .updatedAt(LocalDateTime.now())
                 .build();
+        userService.createLog(AuditLogDTO.builder()
+                .userId(1)
+                .action("UPDATE_INVENTORY")
+                .resource("Item: " + updatedRecord.getName())
+                .details("Modified stock levels or status.")
+                .timestamp(LocalDateTime.now())
+                .build());
 
         return mapToResponseDTO(reliefItemsRepository.save(updatedRecord));
     }

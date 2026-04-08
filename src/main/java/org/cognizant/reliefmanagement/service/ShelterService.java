@@ -1,6 +1,8 @@
 package org.cognizant.reliefmanagement.service;
 
+import org.cognizant.reliefmanagement.client.UserService;
 import org.cognizant.reliefmanagement.dao.ShelterRepository;
+import org.cognizant.reliefmanagement.dto.request.AuditLogDTO;
 import org.cognizant.reliefmanagement.dto.request.ShelterRequestDTO;
 import org.cognizant.reliefmanagement.dto.response.ShelterResponseDTO;
 import org.cognizant.reliefmanagement.entity.Shelter;
@@ -16,6 +18,8 @@ public class ShelterService {
 
     @Autowired
     private ShelterRepository shelterRepository;
+    @Autowired
+    private UserService userService;
 
     // 1. Save a new shelter using RequestDTO
     public ShelterResponseDTO addShelter(ShelterRequestDTO dto) {
@@ -38,6 +42,13 @@ public class ShelterService {
         Shelter savedShelter = shelterRepository.save(shelter);
 
         // Convert saved Entity back to ResponseDTO
+        userService.createLog(AuditLogDTO.builder()
+                .userId(1)
+                .action("ADD_SHELTER")
+                .resource("Shelter: " + savedShelter.getName())
+                .details("Created shelter at " + savedShelter.getLocation() + " with capacity " + savedShelter.getCapacity())
+                .timestamp(LocalDateTime.now())
+                .build());
         return mapToResponseDTO(savedShelter);
     }
 
@@ -92,6 +103,13 @@ public class ShelterService {
                 .status(request.getStatus())
                 .build();
         Shelter savedRecord = shelterRepository.save(updatedRecord);
+        userService.createLog(AuditLogDTO.builder()
+                .userId(1)
+                .action("UPDATE_SHELTER")
+                .resource("ShelterID: " + savedRecord.getShelterId())
+                .details("Updated occupancy or capacity details.")
+                .timestamp(LocalDateTime.now())
+                .build());
         return mapToResponseDTO(savedRecord);
     }
 
@@ -103,6 +121,13 @@ public class ShelterService {
 
         // 2. Perform the deletion
         shelterRepository.deleteById(id);
+        userService.createLog(AuditLogDTO.builder()
+                .userId(1)
+                .action("DELETE_SHELTER")
+                .resource("ShelterID: " + id)
+                .details("Shelter record decommissioned.")
+                .timestamp(LocalDateTime.now())
+                .build());
     }
 
 }

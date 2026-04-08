@@ -1,19 +1,15 @@
 package org.cognizant.reliefmanagement.service;
 
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.core.SecurityContext;
 import lombok.RequiredArgsConstructor;
 import org.cognizant.reliefmanagement.Enum.distributionStatus;
-import org.cognizant.reliefmanagement.client.CitizenService;
 import org.cognizant.reliefmanagement.client.UserService;
 import org.cognizant.reliefmanagement.dao.DistributionRepository;
+import org.cognizant.reliefmanagement.dto.request.AuditLogDTO;
 import org.cognizant.reliefmanagement.dto.request.DistributionRequestDTO;
-import org.cognizant.reliefmanagement.dto.response.CitizenDto;
 import org.cognizant.reliefmanagement.dto.response.DistributionResponseDTO;
 import org.cognizant.reliefmanagement.dto.response.UserDto;
 import org.cognizant.reliefmanagement.entity.Distribution;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -69,6 +65,13 @@ public class DistributionService {
                 .build();
 
         Distribution saved = distributionRepository.save(distribution);
+        userService.createLog(AuditLogDTO.builder()
+                .userId(dto.getOfficerId())
+                .action("CREATE_DISTRIBUTION")
+                .resource("DistributionID: " + saved.getDistributionId())
+                .details("Assigned Item " + dto.getItemId() + " to Citizen " + dto.getCitizenId())
+                .timestamp(LocalDateTime.now())
+                .build());
         return mapToResponseDTO(saved);
     }
 
@@ -91,6 +94,13 @@ public class DistributionService {
                 .build();
 
         Distribution savedRecord = distributionRepository.save(updatedEntity);
+        userService.createLog(AuditLogDTO.builder()
+                .userId(request.getOfficerId())
+                .action("UPDATE_DISTRIBUTION")
+                .resource("DistributionID: " + savedRecord.getDistributionId())
+                .details("Updated status or quantity for distribution record.")
+                .timestamp(LocalDateTime.now())
+                .build());
         return mapToResponseDTO(savedRecord);
     }
 
@@ -114,6 +124,13 @@ public class DistributionService {
             throw new RuntimeException("Distribution record not found with ID: " + id);
         }
         distributionRepository.deleteById(id);
+        userService.createLog(AuditLogDTO.builder()
+                .userId(1) // Placeholder for Admin
+                .action("DELETE_DISTRIBUTION")
+                .resource("DistributionID: " + id)
+                .details("Distribution record deleted from system.")
+                .timestamp(LocalDateTime.now())
+                .build());
     }
 
     // Helper to safely parse Status from String to Enum

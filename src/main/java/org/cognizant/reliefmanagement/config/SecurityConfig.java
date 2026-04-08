@@ -32,19 +32,18 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
 //                        .requestMatchers("/api/users/login", "/api/users/createUser","/api/citizens/createCitizen").permitAll() // ALLOW THESE WITHOUT LOGIN
-//                        .requestMatchers("/api/citizens/createCitizen", "/api/citizens/update/{id}", "/api/documents/upload","/api/documents/delete/{id}", "/api/users/login","/api/reports/getreportbyid/{id}","/api/reports/createreport","/api/reports/getreportwithcitizendetails/{id}/details/","/api/programs/","/ReliefItems/getReliefItemById/{id}","/Shelters/getShelters","/Shelters/getById/{id}","/api/Distributions/deleteDistribution/{id}").hasRole("CITIZEN")
-//                        .requestMatchers("/api/audits/**", "/api/logs/**").hasAnyRole("AUDITOR","MANAGER")
-//                        .requestMatchers("/api/logs/GetAllLogs", "/api/logs/CreateLog","/api/citizens/getAllCitizens","/api/ReliefItems/**","/api/distributions/**","/api/shelters/**").hasRole("AUDITOR")
+//                        .requestMatchers("/api/citizens/createCitizen", "/api/citizens/update/{id}", "/api/documents/upload","/api/documents/delete/{id}", "/api/users/login","/api/reports/getreportbyid/{id}","/api/reports/createreport","/api/reports/getreportwithcitizendetails/{id}/details/","/api/programs/").hasRole("CITIZEN")
+//                        .requestMatchers("/api/audits/**", "/api/logs/**").hasAnyRole("AUDITOR","MANAGER","COMPLIANCE")
+//                        .requestMatchers("/api/logs/GetAllLogs", "/api/logs/CreateLog","/api/citizens/getAllCitizens").hasRole("AUDITOR")
 //                        .requestMatchers("/api/compliance-records/**").hasRole("COMPLIANCE")
 //                                // Officer Endpoints
-//                        .requestMatchers("/api/citizens/getCitizenById/{id}", "/api/citizens/getAllCitizens", "/api/citizens/delete/{id}", "/api/documents/getDocById/{id}", "/api/incidents/**", "/api/recoveries/**","/api/reports/getreportbyid/{id}","/api/ReliefItems/**","/api/Distributions/**","/api/Shelters/**").hasRole("OFFICER")
+//                        .requestMatchers("/api/citizens/getCitizenById/{id}", "/api/citizens/getAllCitizens", "/api/citizens/delete/{id}", "/api/documents/getDocById/{id}", "/api/incidents/**", "/api/shelters/**", "/api/recoveries/**", "/api/distributions/**","/api/reports/getreportbyid/{id}").hasRole("OFFICER")
 //
-//// Manager Endpoints (Now includes all Officer endpoints)
+
 //                        .requestMatchers("/api/users/getByUserId/{id}", "/api/users/getAllUsers", "/api/users/update/{id}", "/api/users/delete/{id}",
 //                                        "/api/citizens/getCitizenById/{id}", "/api/citizens/getAllCitizens", "/api/citizens/delete/{id}", "/api/documents/getDocById/{id}",
-//                                        "/api/incidents/**", "/api/Shelters/**", "/api/recoveries/**", "/api/distributions/**","/api/ReliefItems/**").hasRole("MANAGER")
-//                        .anyRequest().authenticated() // LOCK EVERYTHING ELSE"
-                                .anyRequest().permitAll()
+//                                        "/api/incidents/**", "/api/shelters/**", "/api/recoveries/**", "/api/distributions/**").hasRole("MANAGER")
+                                .anyRequest().permitAll() // LOCK EVERYTHING ELSE
                 )
 
                 .httpBasic(Customizer.withDefaults())
@@ -59,18 +58,20 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration){
-//        return configuration.getAuthenticationManager();
-//
-//    }
-//
-//    @Bean
-//    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
-//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
-//        provider.setPasswordEncoder(new BCryptPasswordEncoder());
-//        return provider;
-//    }
 
+    /*
+   // @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration){
+        return configuration.getAuthenticationManager();
+
+    }
+
+   // @Bean
+    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+        provider.setPasswordEncoder(new BCryptPasswordEncoder());
+        return provider;
+    }
+*/
 
 }
