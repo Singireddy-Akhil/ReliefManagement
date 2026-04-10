@@ -22,17 +22,6 @@ public class ReliefItemService {
     private DistributionRepository distributionRepository;
     @Autowired
     private UserService userService;
-
-//    public ReliefItemService(ReliefItemRepository reliefItemsRepository){
-//        this.reliefItemsRepository = reliefItemsRepository;
-//    }
-//
-//    public ReliefItemService(ReliefItemRepository reliefItemsRepository,
-//                             DistributionRepository distributionRepository) {
-//        this.reliefItemsRepository = reliefItemsRepository;
-//        this.distributionRepository = distributionRepository;
-//    }
-
     public List<ReliefItemResponseDTO> getAllReliefItem(){
         return reliefItemsRepository.findAll().stream()
                 .map(this::mapToResponseDTO)
@@ -105,14 +94,16 @@ public class ReliefItemService {
     }
 
     public ReliefItemResponseDTO updateReliefItem(ReliefItemRequestDTO request) {
-        ReliefItem record = reliefItemsRepository.findByName(request.getName());
+        ReliefItem record = reliefItemsRepository.findById(request.getItemId())
+                .orElseThrow(() -> new RuntimeException("ReliefItem not found with ID: " + request.getItemId()));
 
         if (record == null) {
             throw new RuntimeException("ReliefItem not found");
         }
         // By explicitly setting the ID, you FORCE JPA to perform an update.
         ReliefItem updatedRecord = record.toBuilder()
-                .itemId(record.getItemId())
+                .itemId(record.getItemId()).
+                name(request.getName())
                 .type(request.getType())
                 .quantity(request.getQuantity())
                 .unit(request.getUnit())

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/shelters")
 public class ShelterController {
 
     @Autowired
@@ -20,13 +20,13 @@ public class ShelterController {
 
     // 1. GET: http://localhost:1234/Shelters
     // Now returns a List of ResponseDTOs instead of Entities
-    @GetMapping("/Shelters/getShelters")
+    @GetMapping("/getShelters")
     public ResponseEntity<List<ShelterResponseDTO>> getShelters() {
         List<ShelterResponseDTO> responseList = shelterService.getAllShelters();
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
-    @GetMapping("/Shelters/getById/{id}")
+    @GetMapping("/getById/{id}")
     public ResponseEntity<ShelterResponseDTO> getById(@PathVariable Integer id) {
         // Calling the service to get the data
         ShelterResponseDTO response = shelterService.getShelterById(id);
@@ -35,20 +35,20 @@ public class ShelterController {
 
     // 2. POST: http://localhost:1234/Shelters
     // Receives RequestDTO and returns ResponseDTO
-    @PostMapping("/Shelters/createShelter")
+    @PostMapping("/createShelter")
     public ResponseEntity<ShelterResponseDTO> createShelter(@RequestBody @Valid ShelterRequestDTO requestDto) {
         ShelterResponseDTO response = shelterService.addShelter(requestDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("/Shelters/updateShelter/{id}")
+    @PutMapping("/updateShelter/{id}")
     public ResponseEntity<ShelterResponseDTO> updateShelter(@PathVariable Integer id ,@RequestBody ShelterRequestDTO requestDTO){
        requestDTO.setShelterId(id);
         ShelterResponseDTO response=shelterService.updateShelters(requestDTO);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
-    @DeleteMapping("/Shelters/deleteShelter/{id}")
+    @DeleteMapping("/deleteShelter/{id}")
     public ResponseEntity<String> deleteShelter(@PathVariable Integer id) {
         shelterService.deleteShelter(id);
         return ResponseEntity.ok("Shelter with ID " + id + " has been deleted successfully.");

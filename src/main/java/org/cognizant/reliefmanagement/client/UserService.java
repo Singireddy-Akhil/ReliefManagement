@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "USERCITIZENMANAGEMENT")
+import java.lang.module.Configuration;
+
+@FeignClient(name = "USERCITIZENMANAGEMENT",configuration = FeignClientInterceptor.class)
 public interface UserService {
     @GetMapping("/api/users/getByUserId/{id}")
     UserDto findById(@PathVariable Integer id);
