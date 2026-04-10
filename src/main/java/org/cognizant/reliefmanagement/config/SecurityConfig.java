@@ -34,8 +34,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/login", "/api/users/createUser","/api/citizens/createCitizen").permitAll() // ALLOW THESE WITHOUT LOGIN
 
                                 // Officer Endpoints
-                        .requestMatchers("/api/citizens/getCitizenById/{id}", "/api/citizens/getAllCitizens", "/api/citizens/delete/{id}", "/api/documents/getDocById/{id}", "/api/incidents/**",  "/api/recoveries/**", "/Distributions/**","/api/reports/getreportbyid/{id}","/ReliefItems/**","/api/shelters/**").hasRole("OFFICER")
-
+                        .requestMatchers("/api/citizens/getCitizenById/{id}", "/api/citizens/getAllCitizens", "/api/citizens/delete/{id}", "/api/documents/getDocById/{id}", "/api/incidents/**",  "/api/recoveries/**", "/Distributions/createDistribution","/Distributions/deleteDistribution/{id}","/Distributions/updateDistribution/{id}","/api/reports/getreportbyid/{id}","/ReliefItems/createReliefItem","/ReliefItems/updateReliefItem/{id}","/ReliefItems/deleteReliefItem/{id}","/api/shelters/createShelter","/api/shelters/updateShelter/{id}","/api/shelters/deleteShelter/{id}").hasRole("OFFICER")
+                                .requestMatchers("/Distributions/getDistribution","/Distributions/getDistributionById/{id}","/ReliefItems/getReliefItem","/ReliefItems/getReliefItemById/{id}","/api/shelters/getShelters","/api/shelters/getById/{id}").hasAnyRole("OFFICER","MANAGER","CITIZEN","COMPLIANCE")
+                                .requestMatchers("/ReliefItems/getReliefItem","/ReliefItems/getReliefItemById/{id}","/api/shelters/getShelters","/api/shelters/getById/{id}").hasRole("MANAGER")
 
 
                                  // LOCK EVERYTHING ELSE
