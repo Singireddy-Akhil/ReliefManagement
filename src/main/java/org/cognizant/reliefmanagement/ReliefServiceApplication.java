@@ -8,10 +8,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-public class ReliefManagementApplication {
+public class ReliefServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ReliefManagementApplication.class, args);
+        SpringApplication.run(ReliefServiceApplication.class, args);
     }
 
 
